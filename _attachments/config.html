@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="RSS feed aggregatator">
+    <meta name="description" content="RSS feed aggregatator Config">
 
     <title>RSS feed aggregator</title>
 
@@ -16,10 +16,30 @@
     <script src="js/config.js"></script>
     <script src="js/underscore.js"></script>
     <script>
-
-    window.onload = function(){   RSScfg.loadFeeds();  };
-
+      window.onload = function(){   RSScfg.loadFeeds();   };
     </script>
+
+    <style type="text/css">
+    .feedlist{
+      padding:10px;
+      margin-bottom:5px;
+      background:#333;
+      color:#EEE;
+    }
+
+    .feedlist b{
+      padding-right:10px;
+    }
+
+    .feedlist a:link, .feedlist a:visited{
+      color:#CCC;
+    }
+
+    .feedlist a:hover{
+      color:#999;
+    }
+
+    </style>
 
 
 </head>
@@ -43,21 +63,21 @@
             <h1>Config</h1>
 
             <div id="feedList">
-              Feeds werden geladen..
+              vorhandene Feeds werden geladen..
             </div>
 
             <div id="feedEdit" style="display:none">
               <form class="pure-form pure-form-stacked">
                   <fieldset>
-                      <legend>Name</legend>
+                      <legend>Feed Einstellungen</legend>
 
                       <label for="feedname">Name</label>
                       <input id="feedname" type="text" placeholder="Name">
 
                       <label for="feedurl">URL</label>
                       <input id="feedurl" type="url" placeholder="Url">
-                      <button type="submit" class="pure-button pure-button-primary" onclick="RSScfg.hideEdit();">Zurück</button>
-                      <button type="submit" class="pure-button pure-button-primary" onclick="RSScfg.save();">Speichern</button>
+                      <button type="submit" class="pure-button" style="width:100px" onclick="RSScfg.hideEdit();">Zurück</button>
+                      <button type="submit" class="pure-button pure-button-primary" style="width:100px" onclick="RSScfg.save();">Speichern</button>
                   </fieldset>
               </form>
             </form>

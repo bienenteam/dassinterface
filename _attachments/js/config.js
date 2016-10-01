@@ -30,7 +30,7 @@ var RSScfg = {
             this.feeds[ data.rows[i].value ] = data.rows[i] ;
 
             var el = document.createElement("div");
-            el.innerHTML = '<div> <b>'+ data.rows[i].doc.name +'</b> <a href="#editFeed" style="color:#000" onclick="RSScfg.editFeed(\''+ data.rows[i].value +'\');">[edit]</a><a href="#editFeed" style="color:#000" onclick="RSScfg.delete(\''+ data.rows[i].value +'\' );">[x]</a>  </div>';
+            el.innerHTML = '<div class="feedlist"> <b>'+ data.rows[i].doc.name +'</b> <a href="#editFeed" onclick="RSScfg.editFeed(\''+ data.rows[i].value +'\');">[edit]</a><a href="#editFeed" onclick="RSScfg.delete(\''+ data.rows[i].value +'\' );">[x]</a>  </div>';
             obj.appendChild(el);
           }
 
@@ -43,7 +43,7 @@ var RSScfg = {
         }
 
         var el = document.createElement("div");
-        el.innerHTML = '<div> <b><a href="#editFeed" style="color:#000" onclick="RSScfg.editFeed( 0 );">[add]</a>  </div>';
+        el.innerHTML = '<div> <b><a href="#editFeed" style="color:#000" onclick="RSScfg.editFeed( 0 );">[ Feed hinzuf&uuml;gen ]</a>  </div>';
         obj.appendChild(el);
 
     },
