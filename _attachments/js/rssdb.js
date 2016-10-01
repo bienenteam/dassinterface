@@ -1,25 +1,28 @@
 
 /*
-intf fields:
-	addFeedItem(item)
-	addFeed(feed)
+Parameters:
+	intf: {
+		addFeedItem: function(item_info) - Add a feed item on top of the item list.
+		addFeed: function(feed_info) - Add a feed to the list of available feeds.
+	}
 
 */
 function RssDB(intf) {
 	var store = {
-		database: "http://93.180.156.188:5984/simdata",
-		pollInterval: 1500,
-		updateHandle: null,
-		lastSequence: 0,
-		loadLimit: 50,
+		database: "http://93.180.156.188:5984/beehive",
+		pollInterval: 2000,
+		updateHandle: null, // The timeout handle for managing interval update calls.
+		lastSequence: 0, // The last sequence number that was polled from the database.
+		loadLimit: 50, // The maximum count of changes to poll in one interval.
 		didFirstPoll: false,
-		filterHideFeeds: [],
-		feeds: []
+		filterHideFeeds: [], // An array of feed ids that's items should not be displayed.
+		feeds: [] // All feed information.
 	};
 
 
 
-	function upcall(fn, arg) { // Safely call a function passed by top level api.
+	// Safely call a function passed by top level api.
+	function upcall(fn, arg) {
 		try {
 			fn(arg);
 		} catch(err) {
@@ -27,6 +30,7 @@ function RssDB(intf) {
 		}
 	}
 
+	// Find an existing feed info by its id.
 	function findFeedInfo(feedId) {
 		for(var i = 0; i < store.feeds.length; i++)
 			if (store.feeds[i].id == feedId)
@@ -34,6 +38,7 @@ function RssDB(intf) {
 		return null;
 	}
 
+	// Poll a feed info if it is not present.
 	function requireFeedInfo(feedId) {
 		if (typeof feedId !== 'undefined') {
 			var info = findFeedInfo(feedId);
@@ -45,6 +50,7 @@ function RssDB(intf) {
 		}
 	}
 
+	// Poll or update a feed info and store it.
 	function pollFeedInfo(feedId) {
 		request("GET", store.database + "/" + feedId, function(response) {
 			var info = findFeedInfo(feedId);
@@ -53,6 +59,7 @@ function RssDB(intf) {
 		});
 	}
 
+	// Do the initial changes poll.
 	function pollFirstChangesFeed() {
 		var query = "since=0&limit=" + store.loadLimit + "&descending=true";
 		request("GET", store.database + "/_changes?" + query, function(response) {
@@ -65,6 +72,7 @@ function RssDB(intf) {
 		});
 	}
 
+	// Poll latest item changes or new items.
 	function pollChangedFeedItems() {
 		if (store.didFirstPoll) {
 			var query = "include_docs=true&since=" + store.lastSequence
@@ -88,11 +96,13 @@ function RssDB(intf) {
 
 
 
+	// Set a feed as hidden.
 	function setHideFeed(id) {
 		store.filterHideFeeds.push(id);
 		resetPollSequence();
 	}
 
+	// Set a feed as shown.
 	function setShowFeed(id) {
 		var i = store.filterHideFeeds.indexOf(id);
 		if(i >= 0)
@@ -100,6 +110,7 @@ function RssDB(intf) {
 		resetPollSequence();
 	}
 
+	// Reset, which items have been polled.
 	function resetPollSequence() {
 		store.lastSequence = 0;
 		store.didFirstPoll = false;
@@ -108,10 +119,12 @@ function RssDB(intf) {
 			updateNextFrame();
 	}
 
+	// Update when this call ends.
 	function updateNextFrame() {
 		setTimeout(updateNow, 0);
 	}
 
+	// Update now.
 	function updateNow() {
 		if (store.updateHandle == null) {
 			update();
@@ -123,16 +136,19 @@ function RssDB(intf) {
 		}
 	}
 
+	// Update now and set the timeout for the next update.
 	function update() {
 		store.updateHandle = setTimeout(update, store.pollInterval);
 		pollChangedFeedItems();
 	}
 
+	// Start updating.
 	function start() {
 		if (store.updateHandle == null)
 			update();
 	}
 
+	// Stop updating.
 	function stop() {
 		if (store.updateHandle != null) {
 			clearTimeout(store.updateHandle);
@@ -143,6 +159,7 @@ function RssDB(intf) {
 
 
 
+	// Do a http request using json request and response entities.
 	function request(method, url, callback, body) {
 		var rx = new XMLHttpRequest();
 		rx.open(method, url);
