@@ -11,6 +11,7 @@ function RssDB(intf) {
 		pollInterval: 1500,
 		updateHandle: null,
 		lastSequence: 0,
+		loadLimit: 50,
 		didFirstPoll: false,
 		filterHideFeeds: [],
 		feeds: []
@@ -53,11 +54,11 @@ function RssDB(intf) {
 	}
 
 	function pollFirstChangesFeed() {
-		var query = "since=0&limit=50&descending=true";
+		var query = "since=0&limit=" + store.loadLimit + "&descending=true";
 		request("GET", store.database + "/_changes?" + query, function(response) {
 			if (!store.didFirstPoll) {
 				store.didFirstPoll = true;
-				store.lastSequence = Math.max(0, response.data.last_seq - 50);
+				store.lastSequence = Math.max(0, response.data.last_seq);
 
 				updateNextFrame();
 			}
@@ -67,7 +68,7 @@ function RssDB(intf) {
 	function pollChangedFeedItems() {
 		if (store.didFirstPoll) {
 			var query = "include_docs=true&since=" + store.lastSequence
-				+ "&limit=50";
+				+ "&limit=" + store.loadLimit;
 			request("GET", store.database + "/_changes?" + query, function(response) {
 				var results = response.data.results;
 				for(var i = 0; i < results.length; i++) {
@@ -102,7 +103,7 @@ function RssDB(intf) {
 	function resetPollSequence() {
 		store.lastSequence = 0;
 		store.didFirstPoll = false;
-		
+
 		if (store.updateHandle != null)
 			updateNextFrame();
 	}
