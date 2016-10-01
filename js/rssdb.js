@@ -1,27 +1,18 @@
 
 function RssDB(intf) {
-	var itemSource = "testdb";
+	var itemSource = "http://93.180.156.188:5984/simdata";
 	var itemFields = ["_id", "_rev", "title"];
 	var pollInterval = 1500;
 	var updateHandle = null;
+	var lastSequence = 0;
 
-	function pollInitialFeedItems() {
-		request("POST", itemSource + "/_find", function(response) {
-			var feedItems = response.data.docs;
-			for(var i = 0; i < feedItems.length; i++) {
-				intf.addFeedItem(feedItems[i]);
-			}
-		}, {
-			selector: { type: "item" },
-			fields: itemFields,
-			sort: [{published: "desc"}],
-			limit: 50,
-			skip: 0
-		});
-	}
+
+
+
 
 	function pollChangedFeedItems() {
-		request("POST", itemSource + "/_changes?filter=_selector&include_docs=true", function(response) {
+		var query = "filter=_selector&include_docs=true&since=" + lastSequence;
+		request("POST", itemSource + "/_changes?" + query, function(response) {
 			var results = response.data.results;
 			for(var i = 0; i < results.length; i++) {
 				intf.addFeedItem(results[i].doc);
@@ -62,8 +53,6 @@ function RssDB(intf) {
 		});
 		rx.send(body);
 	}
-
-	pollInitialFeedItems();
 
 	this.start = start;
 	this.stop = stop;
