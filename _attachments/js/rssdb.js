@@ -2,6 +2,7 @@
 /*
 intf fields:
 	addFeedItem(item)
+	addFeed(feed)
 
 */
 function RssDB(intf) {
@@ -11,10 +12,40 @@ function RssDB(intf) {
 		updateHandle: null,
 		lastSequence: 0,
 		didFirstPoll: false,
-		filterHideFeeds: []
+		filterHideFeeds: [],
+		feeds: []
 	};
 
 
+
+	function findFeedInfo(feedId) {
+		for(var i = 0; i < store.feeds.length; i++)
+			if (store.feeds[i].id == feedId)
+				return store.feeds[i];
+		return null;
+	}
+
+	function requireFeedInfo(feedId) {
+		var info = findFeedInfo(feedId);
+		if (!info) {
+			info = { id: feedId };
+			store.feeds.push(info);
+			pollFeedInfo(feedId);
+		}
+	}
+
+	function pollFeedInfo(feedId) {
+		console.warn("Feed info polling is not implemented :O");
+		// TODO: Request...
+		// When request is done:
+		var info = findFeedInfo(feedId);
+		info.data = {
+			_id: "yeee930329482039480394",
+			name: "A Feed!",
+			url: "http://www.google.de/"
+		};
+		intf.addFeed(info.data);
+	}
 
 	function pollFirstChangesFeed() {
 		var query = "include_docs=true&since=" + store.lastSequence
@@ -33,9 +64,15 @@ function RssDB(intf) {
 				+ "&limit=50";
 			request("GET", store.database + "/_changes?" + query, function(response) {
 				var results = response.data.results;
-				for(var i = 0; i < results.length; i++)
-					if (results[i].doc.type == "item" && store.filterHideFeeds.indexOf(results[i].doc.id) < 0)
-						intf.addFeedItem(results[i].doc);
+				for(var i = 0; i < results.length; i++) {
+					var res = results[i];
+					if (res.doc.type == "item" && store.filterHideFeeds.indexOf(res.doc.feedId) < 0) {
+						intf.addFeedItem(res.doc);
+
+						// Replace with 'res.feedId'
+						requireFeedInfo("testFeed0000001010010101");
+					}
+				}
 
 				store.lastSequence = response.data.last_seq;
 			});

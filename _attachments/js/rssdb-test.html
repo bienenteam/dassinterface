@@ -10,6 +10,10 @@
 			var db = new RssDB({
 				addFeedItem: function(item) {
 					console.info("Add item: " + item.title);
+				},
+
+				addFeed: function(feed) {
+					console.info("Adding feed: " + feed.name);
 				}
 			});
 
