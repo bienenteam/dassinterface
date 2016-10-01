@@ -29,7 +29,7 @@ function CreateFeedItem(item){
 
 function CreateFeed(feed){
 
-  var template = _.template("<a class='pure-button' onclick='FilterItems(this)' id='<%= id %>'><%= title %></a>");
+  var template = _.template("<a class='pure-button' onclick='FilterItems(this)' id='<%= feedid %>'><%= title %></a>");
   console.log(feed);
   var render = template(feed);
   var para = document.createElement("li");
