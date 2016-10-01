@@ -58,7 +58,7 @@ function RssDB(intf) {
 			if (!store.didFirstPoll) {
 				store.didFirstPoll = true;
 				store.lastSequence = Math.max(0, response.data.last_seq - 50);
-				
+
 				updateNextFrame();
 			}
 		});
@@ -102,6 +102,9 @@ function RssDB(intf) {
 	function resetPollSequence() {
 		store.lastSequence = 0;
 		store.didFirstPoll = false;
+		
+		if (store.updateHandle != null)
+			updateNextFrame();
 	}
 
 	function updateNextFrame() {
