@@ -29,7 +29,7 @@ function RssDB(intf) {
 			request("GET", store.database + "/_changes?" + query, function(response) {
 				var results = response.data.results;
 				for(var i = 0; i < results.length; i++)
-					if (results[i].doc.type == "item")
+					if (results[i].doc.type == "item" && store.filterHideFeeds.indexOf(results[i].doc.id) < 0)
 						intf.addFeedItem(results[i].doc);
 
 				store.lastSequence = response.data.last_seq;
@@ -94,7 +94,7 @@ function RssDB(intf) {
 
 	this.start = start;
 	this.stop = stop;
-	
+
 	this.setHideFeed = setHideFeed;
 	this.setShowFeed = setShowFeed;
 }
