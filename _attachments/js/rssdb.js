@@ -35,31 +35,13 @@ function RssDB(intf) {
 	}
 
 	function pollFeedInfo(feedId) {
-		/* Uncomment this when feedIds are implemented...
-		request("POST", store.database + "/_find", function(response) {
-			var docs = response.data.docs;
-			if (docs.length > 0) {
-				var info = findFeedInfo(feedId);
-				info.data = docs[0];
-				intf.addFeed(info.data);
-
-			} else {
-				console.warn("Unable to find ");
-			}
-		}, {
-			selector: { type: "feed", _id: feedId }
+		request("GET", store.database + "/" + feedId, function(response) {
+			var info = findFeedInfo(feedId);
+			info.data = response.data;
+			intf.addFeed(info.data);
 		});
-		*/
-
-		var info = findFeedInfo(feedId);
-		info.data = {
-			_id: "yeee930329482039480394",
-			name: "A Feed!",
-			url: "http://www.google.de/"
-		};
-		intf.addFeed(info.data);
 	}
-
+	
 	function pollFirstChangesFeed() {
 		var query = "include_docs=true&since=" + store.lastSequence
 			+ "&limit=1&descending=true";
@@ -81,9 +63,7 @@ function RssDB(intf) {
 					var res = results[i];
 					if (res.doc.type == "item" && store.filterHideFeeds.indexOf(res.doc.feedId) < 0) {
 						intf.addFeedItem(res.doc);
-
-						// Replace with 'res.feedId'
-						requireFeedInfo("testFeed0000001010010101");
+						requireFeedInfo(res.doc.feedId);
 					}
 				}
 
