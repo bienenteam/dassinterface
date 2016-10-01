@@ -1,15 +1,15 @@
 
 /*
 Parameters:
-	intf: {
-		addFeedItem: function(item_info) - Add a feed item on top of the item list.
-		addFeed: function(feed_info) - Add a feed to the list of available feeds.
-	}
+intf: {
+addFeedItem: function(item_info) - Add a feed item on top of the item list.
+addFeed: function(feed_info) - Add a feed to the list of available feeds.
+}
 
 */
 function RssDB(intf) {
 	var store = {
-		database: "http://93.180.156.188:5984/beehive",
+		database: "/beehive",
 		pollInterval: 2000,
 		updateHandle: null, // The timeout handle for managing interval update calls.
 		lastSequence: 0, // The last sequence number that was polled from the database.
@@ -43,8 +43,8 @@ function RssDB(intf) {
 	// Find an existing feed info by its id.
 	function findFeedInfo(feedId) {
 		for(var i = 0; i < store.feeds.length; i++)
-			if (store.feeds[i].id == feedId)
-				return store.feeds[i];
+		if (store.feeds[i].id == feedId)
+		return store.feeds[i];
 		return null;
 	}
 
@@ -86,7 +86,7 @@ function RssDB(intf) {
 	function pollChangedFeedItems() {
 		if (store.didFirstPoll) {
 			var query = "include_docs=true&since=" + store.lastSequence
-				+ "&limit=" + store.loadLimit;
+			+ "&limit=" + store.loadLimit;
 			request("GET", store.database + "/_changes?" + query, function(response) {
 				var results = response.data.results;
 				for(var i = 0; i < results.length; i++) {
@@ -115,8 +115,9 @@ function RssDB(intf) {
 	// Set a feed as shown.
 	function setShowFeed(id) {
 		var i = store.filterHideFeeds.indexOf(id);
-		if(i >= 0)
+		if(i >= 0) {
 			store.filterHideFeeds.splice(i, 1);
+		}
 		resetPollSequence();
 	}
 
@@ -126,7 +127,7 @@ function RssDB(intf) {
 		store.didFirstPoll = false;
 
 		if (store.updateHandle != null)
-			updateNextFrame();
+		updateNextFrame();
 	}
 
 	// Update when this call ends.
@@ -155,7 +156,7 @@ function RssDB(intf) {
 	// Start updating.
 	function start() {
 		if (store.updateHandle == null)
-			update();
+		update();
 	}
 
 	// Stop updating.
@@ -180,9 +181,9 @@ function RssDB(intf) {
 		});
 
 		if (body)
-			rx.send(JSON.stringify(body));
+		rx.send(JSON.stringify(body));
 		else
-			rx.send();
+		rx.send();
 	}
 
 	this.start = start; // Start polling changes.
