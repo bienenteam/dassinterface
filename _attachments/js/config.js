@@ -2,7 +2,7 @@
 var RSScfg = {
 
     url : 'http://93.180.156.188:5984/',        // url mit abshcliessendem "/"
-    db : 'simdata/',                            // mit abschliessendem "/"
+    db : 'beehive/',                            // mit abschliessendem "/"
     feeds : {},
     currEdit : false,
 
@@ -24,11 +24,13 @@ var RSScfg = {
         if( data.rows.length > 0 ){
 
           for( var i = 0; i < data.rows.length; i++){
-
+            if( data.rows[i].doc.disabled ){
+                continue;
+            }
             this.feeds[ data.rows[i].value ] = data.rows[i] ;
 
             var el = document.createElement("div");
-            el.innerHTML = '<div> <b>'+ data.rows[i].doc.name +'</b> <a href="#editFeed" style="color:#000" onclick="RSScfg.editFeed(\''+ data.rows[i].value +'\' );">[edit]</a>  </div>';
+            el.innerHTML = '<div class="feedlist"> <b>'+ data.rows[i].doc.name +'</b> <a href="#editFeed" onclick="RSScfg.editFeed(\''+ data.rows[i].value +'\');">[edit]</a><a href="#editFeed" onclick="RSScfg.delete(\''+ data.rows[i].value +'\' );">[x]</a>  </div>';
             obj.appendChild(el);
           }
 
@@ -41,7 +43,7 @@ var RSScfg = {
         }
 
         var el = document.createElement("div");
-        el.innerHTML = '<div> <b><a href="#editFeed" style="color:#000" onclick="RSScfg.editFeed( 0 );">[add]</a>  </div>';
+        el.innerHTML = '<div> <b><a href="#editFeed" style="color:#000" onclick="RSScfg.editFeed( 0 );">[ Feed hinzuf&uuml;gen ]</a>  </div>';
         obj.appendChild(el);
 
     },
@@ -56,7 +58,7 @@ var RSScfg = {
        el.style.display = "block";
 
        var feed = { name : '', url: ''};
-       if( id ){
+       if( id != 0 ){
          feed = this.feeds[ id ].doc;
        }
 
@@ -74,8 +76,8 @@ var RSScfg = {
 
     if( data["url"].length < 11 ){
       alert("Error: Eine gültige Url wäre gut.");
+      return;
     }
-    return;
 
     if( data["name"] == '' ){
       alert("Error: Ein Name wäre gut.");
@@ -83,14 +85,15 @@ var RSScfg = {
     }
 
     if( this.currEdit != 0 ){
+
+      // change
       data["_id"] =  this.feeds[ this.currEdit ]._id;
       data["rev"] =  this.feeds[ this.currEdit ].rev;
       this._save( data );
 
     }else{
-
+      // neu
       this.request('GET', this.url + "_uuids" , function(d){
-          console.log( d.data.uuids );
             RSScfg.currEdit = d.data.uuids;
             RSScfg._save( data );
 
@@ -104,18 +107,30 @@ var RSScfg = {
 
         this.request('PUT', this.url + this.db +  this.currEdit , function(d){
 
-                console.log("Speichern");
-                console.log( d );
-
-                this.hideEdit();
-
+                RSScfg.hideEdit();
                 RSScfg.currEdit = false;
                 RSScfg.loadFeeds();
 
               }, data  );
 
+  },
 
+  delete: function( id ){
 
+    if( !confirm( this.feeds[ id ].doc.name + " Wirklich entfernen?") ){
+        return;
+    }
+
+    this.currEdit = id;
+    var data = RSScfg.feeds[ id ].doc;
+    data["disabled"] = true;
+
+    this._save( data );
+
+    /* if( confirm( this.feeds[ id ].doc.name + " Wirklich entfernen?") ){
+      this.request( 'DELETE', this.url + this.db + id +"?rev="+ RSScfg.feeds[ id ].doc._rev , function(){   RSScfg.loadFeeds();  }, '' );
+    }
+    */
   },
 
   hideEdit: function(){
