@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="RSS feed aggregatator">
+
+    <title>RSS feed aggregator</title>
+
+    <link rel="stylesheet" href="css/layouts/main.css">
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css">
+    <link rel="stylesheet" href="css/layouts/blog.css">
+
+
+    <script src="js/config.js"></script>
+    <script src="js/underscore.js"></script>
+    <script>
+
+    window.onload = function(){   RSScfg.loadFeeds();  };
+
+    </script>
+
+
+</head>
+<body>
+
+
+  <div id="layout" class="pure-g">
+      <div class="sidebar pure-u-1 pure-u-md-1-12">
+          <div class="header">
+              <h1 class="brand-title"></h1>
+              <h2 class="brand-tagline">RSS</h2>
+
+              <nav class="nav">
+                  <a href="http://93.180.156.188:5984/simdata/_design/meise/index.html">zum Feed</a>
+              </nav>
+          </div>
+      </div>
+
+      <div class="content pure-u-1 pure-u-md-3-4" >
+          <div id="postsection">
+            <h1Config</h1>
+
+            <div id="feedList">
+              Feeds werden geladen..
+            </div>
+
+            <div id="feedEdit" style="display:none">
+              <form class="pure-form pure-form-stacked">
+                  <fieldset>
+                      <legend>Name</legend>
+
+                      <label for="feedname">Name</label>
+                      <input id="feedname" type="text" placeholder="Name">
+
+                      <label for="feedurl">URL</label>
+                      <input id="feedurl" type="url" placeholder="Url">
+                      <button type="submit" class="pure-button pure-button-primary" onclick="RSScfg.hideEdit();">Zurück</button>
+                      <button type="submit" class="pure-button pure-button-primary" onclick="RSScfg.save();">Speichern</button>
+                  </fieldset>
+              </form>
+            </form>
+
+          </div>
+
+          </div>
+
+      </div>
+  </div>
+
+
+</body>
+</html>
