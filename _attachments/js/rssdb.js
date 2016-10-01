@@ -26,11 +26,13 @@ function RssDB(intf) {
 	}
 
 	function requireFeedInfo(feedId) {
-		var info = findFeedInfo(feedId);
-		if (!info) {
-			info = { id: feedId };
-			store.feeds.push(info);
-			pollFeedInfo(feedId);
+		if (typeof feedId !== 'undefined') {
+			var info = findFeedInfo(feedId);
+			if (!info) {
+				info = { id: feedId };
+				store.feeds.push(info);
+				pollFeedInfo(feedId);
+			}
 		}
 	}
 
@@ -41,10 +43,9 @@ function RssDB(intf) {
 			intf.addFeed(info.data);
 		});
 	}
-	
+
 	function pollFirstChangesFeed() {
-		var query = "include_docs=true&since=" + store.lastSequence
-			+ "&limit=1&descending=true";
+		var query = "since=0&limit=50&descending=true";
 		request("GET", store.database + "/_changes?" + query, function(response) {
 			if (!store.didFirstPoll) {
 				store.didFirstPoll = true;
