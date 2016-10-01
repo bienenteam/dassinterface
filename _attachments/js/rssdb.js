@@ -5,7 +5,8 @@ function RssDB(intf) {
 		pollInterval: 1500,
 		updateHandle: null,
 		lastSequence: 0,
-		didFirstPoll: false
+		didFirstPoll: false,
+		filterHideFeeds: []
 	};
 
 
@@ -39,6 +40,23 @@ function RssDB(intf) {
 	}
 
 
+
+	function setHideFeed(id) {
+		store.filterHideFeeds.push(id);
+		resetPollSequence();
+	}
+
+	function setShowFeed(id) {
+		var i = store.filterHideFeeds.indexOf(id);
+		if(i >= 0)
+			store.filterHideFeeds.splice(i, 1);
+		resetPollSequence();
+	}
+
+	function resetPollSequence() {
+		store.lastSequence = 0;
+		store.didFirstPoll = false;
+	}
 
 	function update() {
 		store.updateHandle = setTimeout(update, store.pollInterval);
@@ -76,6 +94,9 @@ function RssDB(intf) {
 
 	this.start = start;
 	this.stop = stop;
+	
+	this.setHideFeed = setHideFeed;
+	this.setShowFeed = setShowFeed;
 }
 
 
