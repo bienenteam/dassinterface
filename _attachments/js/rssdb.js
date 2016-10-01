@@ -35,9 +35,22 @@ function RssDB(intf) {
 	}
 
 	function pollFeedInfo(feedId) {
-		console.warn("Feed info polling is not implemented :O");
-		// TODO: Request...
-		// When request is done:
+		/* Uncomment this when feedIds are implemented...
+		request("POST", store.database + "/_find", function(response) {
+			var docs = response.data.docs;
+			if (docs.length > 0) {
+				var info = findFeedInfo(feedId);
+				info.data = docs[0];
+				intf.addFeed(info.data);
+
+			} else {
+				console.warn("Unable to find ");
+			}
+		}, {
+			selector: { type: "feed", _id: feedId }
+		});
+		*/
+
 		var info = findFeedInfo(feedId);
 		info.data = {
 			_id: "yeee930329482039480394",
