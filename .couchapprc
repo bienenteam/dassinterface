@@ -1,0 +1,7 @@
+{
+	"env" : {
+		"default" : {
+			"db" : "http://admin:bienengebenhonig@93.180.156.188:5984/simdata/"
+		}
+	}
+}
