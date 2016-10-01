@@ -1,4 +1,9 @@
 
+/*
+intf fields:
+	addFeedItem(item)
+
+*/
 function RssDB(intf) {
 	var store = {
 		database: "http://93.180.156.188:5984/simdata",
@@ -72,6 +77,7 @@ function RssDB(intf) {
 		if (store.updateHandle != null) {
 			clearTimeout(store.updateHandle);
 			store.updateHandle = null;
+			resetPollSequence();
 		}
 	}
 
@@ -92,11 +98,10 @@ function RssDB(intf) {
 			rx.send();
 	}
 
-	this.start = start;
-	this.stop = stop;
-
-	this.setHideFeed = setHideFeed;
-	this.setShowFeed = setShowFeed;
+	this.start = start; // Start polling changes.
+	this.stop = stop; // Stop polling changes and reset the sequence.
+	this.setHideFeed = setHideFeed; // (id) Hide all feed items by feed id.
+	this.setShowFeed = setShowFeed; // (id) Show all feed items by feed id.
 }
 
 
