@@ -16,18 +16,28 @@ function RssDB(intf) {
 		loadLimit: 50, // The maximum count of changes to poll in one interval.
 		didFirstPoll: false,
 		filterHideFeeds: [], // An array of feed ids that's items should not be displayed.
-		feeds: [] // All feed information.
+		feeds: [], // All feed information.
+		catchErrors: false
 	};
 
 
 
 	// Safely call a function passed by top level api.
 	function upcall(fn, arg) {
-		try {
+		if (catchErrors) {
+			try {
+				fn(arg);
+			} catch(err) {
+				console.error(err);
+			}
+		} else {
 			fn(arg);
-		} catch(err) {
-			console.error(err);
 		}
+	}
+
+	// Set if errors from the toplevel api should be cacthed.
+	function setCatchErrors(enabled) {
+		store.catchErrors = enabled;
 	}
 
 	// Find an existing feed info by its id.
