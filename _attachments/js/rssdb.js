@@ -18,6 +18,14 @@ function RssDB(intf) {
 
 
 
+	function upcall(fn, arg) { // Safely call a function passed by top level api.
+		try {
+			fn(arg);
+		} catch(err) {
+			console.error(err);
+		}
+	}
+
 	function findFeedInfo(feedId) {
 		for(var i = 0; i < store.feeds.length; i++)
 			if (store.feeds[i].id == feedId)
@@ -40,7 +48,7 @@ function RssDB(intf) {
 		request("GET", store.database + "/" + feedId, function(response) {
 			var info = findFeedInfo(feedId);
 			info.data = response.data;
-			intf.addFeed(info.data);
+			upcall(intf.addFeed, info.data);
 		});
 	}
 
@@ -50,6 +58,8 @@ function RssDB(intf) {
 			if (!store.didFirstPoll) {
 				store.didFirstPoll = true;
 				store.lastSequence = Math.max(0, response.data.last_seq - 50);
+				
+				updateNextFrame();
 			}
 		});
 	}
@@ -63,7 +73,7 @@ function RssDB(intf) {
 				for(var i = 0; i < results.length; i++) {
 					var res = results[i];
 					if (res.doc.type == "item" && store.filterHideFeeds.indexOf(res.doc.feedId) < 0) {
-						intf.addFeedItem(res.doc);
+						upcall(intf.addFeedItem, res.doc);
 						requireFeedInfo(res.doc.feedId);
 					}
 				}
@@ -92,6 +102,21 @@ function RssDB(intf) {
 	function resetPollSequence() {
 		store.lastSequence = 0;
 		store.didFirstPoll = false;
+	}
+
+	function updateNextFrame() {
+		setTimeout(updateNow, 0);
+	}
+
+	function updateNow() {
+		if (store.updateHandle == null) {
+			update();
+			clearTimeout(store.updateHandle);
+			store.updateHandle = null;
+		} else {
+			clearTimeout(store.updateHandle);
+			update();
+		}
 	}
 
 	function update() {
