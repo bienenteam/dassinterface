@@ -1,8 +1,19 @@
 
+.active-source a{
+      border: 2px solid rgb(255, 255, 255) !important;
+      text-decoration: none;
+}
+
+.active-source a:hover{
+      border: 2px solid rgb(140, 140, 140) !important;
+      text-decoration: none;
+}
+
 .nav-item{
   height:50px;
   width:50px;
   padding: 5px !important;
+  margin: 5px;
 }
 
 .pure-button{
@@ -12,7 +23,7 @@
 }
 
 .filtericon{
-  height:30px;
-  width: 30px;
+  height:42px;
+  width: 42px;
   margin:2px;
 }
