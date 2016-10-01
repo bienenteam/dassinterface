@@ -24,7 +24,7 @@ function RssDB(intf) {
 
 	// Safely call a function passed by top level api.
 	function upcall(fn, arg) {
-		if (catchErrors) {
+		if (store.catchErrors) {
 			try {
 				fn(arg);
 			} catch(err) {
