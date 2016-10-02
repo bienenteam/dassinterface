@@ -1,3 +1,6 @@
+/* Author: Max Polster */
+
+
 
 /*
 Parameters:
@@ -6,7 +9,6 @@ addFeedItemTop: function(item_info) - Add a feed item on top of the item list.
 addFeedItemBottom: function(item_info) - Add a feed item at the bottom.
 addFeed: function(feed_info) - Add a feed to the list of available feeds.
 }
-
 */
 function RssDB(intf) {
 	var store = {
