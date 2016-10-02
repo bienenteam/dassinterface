@@ -2,7 +2,7 @@
 /*
 Parameters:
 intf: {
-addFeedItem: function(item_info) - Add a feed item on top of the item list.
+addFeedItemTop: function(item_info) - Add a feed item on top of the item list.
 addFeedItemBottom: function(item_info) - Add a feed item at the bottom.
 addFeed: function(feed_info) - Add a feed to the list of available feeds.
 }
@@ -97,7 +97,7 @@ function RssDB(intf) {
 				for(var i = 0; i < results.length; i++) {
 					var res = results[i];
 					if (res.doc.type == "item" && store.filterHideFeeds.indexOf(res.doc.feedId) < 0) {
-						upcall(intf.addFeedItem, res.doc);
+						upcall(intf.addFeedItemTop, res.doc);
 						requireFeedInfo(res.doc.feedId);
 
 						if (res.seq < store.minSequence)
