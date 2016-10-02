@@ -217,4 +217,5 @@ function RssDB(intf) {
 	this.setHideFeed = setHideFeed; // (id) Hide all feed items by feed id.
 	this.setShowFeed = setShowFeed; // (id) Show all feed items by feed id.
 	this.pollPrevious = pollPrevious; // Load previous items.
+	this.setCatchErrors = setCatchErrors; // Set if errors should be catched.
 }
