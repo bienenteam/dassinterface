@@ -51,9 +51,11 @@ function RssDB(intf) {
 
 	// Find an existing feed info by its id.
 	function findFeedInfo(feedId) {
-		for(var i = 0; i < store.feeds.length; i++)
-		if (store.feeds[i].id == feedId)
-		return store.feeds[i];
+		for(var i = 0; i < store.feeds.length; i++) {
+			if (store.feeds[i].id == feedId) {
+				return store.feeds[i];
+			}
+		}
 		return null;
 	}
 
@@ -98,16 +100,19 @@ function RssDB(intf) {
 			+ "&limit=" + store.loadLimit;
 			request("GET", store.database + "/_changes?" + query, function(response) {
 				var results = response.data.results;
-				if (response.data.last_seq < store.minSequence)
+				if (response.data.last_seq < store.minSequence) {
 					store.minSequence = response.data.last_seq;
+				}
+
 				for(var i = 0; i < results.length; i++) {
 					var res = results[i];
 					if (res.doc.type == "item" && store.filterHideFeeds.indexOf(res.doc.feedId) < 0) {
 						upcall(intf.addFeedItemTop, res.doc);
 						requireFeedInfo(res.doc.feedId);
 
-						if (res.seq < store.minSequence)
+						if (res.seq < store.minSequence) {
 							store.minSequence = res.seq;
+						}
 					}
 				}
 				store.lastSequence = response.data.last_seq;
@@ -121,8 +126,8 @@ function RssDB(intf) {
 	function pollPrevious() {
 		var oldMinSequence = store.minSequence;
 		store.minSequence -= store.prevLoadCount;
-			var query = "include_docs=true&since=" + store.minSequence
-			+ "&limit=" + (oldMinSequence - store.minSequence);
+		var query = "include_docs=true&since=" + store.minSequence
+		+ "&limit=" + (oldMinSequence - store.minSequence);
 		request("GET", store.database + "/_changes?" + query, function(response) {
 			var results = response.data.results;
 			for(var i = results.length - 1; i >= 0; i--) {
@@ -160,8 +165,9 @@ function RssDB(intf) {
 		store.didFirstPoll = false;
 		store.minSequence = Number.MAX_VALUE;
 
-		if (store.updateHandle != null)
-		updateNextFrame();
+		if (store.updateHandle != null) {
+			updateNextFrame();
+		}
 	}
 
 	// Update when this call ends.
