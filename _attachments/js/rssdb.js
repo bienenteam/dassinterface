@@ -15,7 +15,7 @@ function RssDB(intf) {
 		updateHandle: null, // The timeout handle for managing interval update calls.
 		lastSequence: 0, // The last sequence number that was polled from the database.
 		loadLimit: 50, // The maximum count of changes to poll in one interval.
-		prevLoadLimit: 25, // The number of changes to load if the user scrolls down.
+		prevLoadCount: 25, // The number of changes to load if the user scrolls down.
 		minSequence: Number.MAX_VALUE, // The sequence number of the oldest item.
 		didFirstPoll: false,
 		filterHideFeeds: [], // An array of feed ids that's items should not be displayed.
@@ -114,12 +114,12 @@ function RssDB(intf) {
 	// Load old items.
 	function pollPrevious() {
 		var oldMinSequence = store.minSequence;
-		store.minSequence -= 1;
+		store.minSequence -= store.prevLoadCount;
 			var query = "include_docs=true&since=" + store.minSequence
 			+ "&limit=" + (oldMinSequence - store.minSequence);
 		request("GET", store.database + "/_changes?" + query, function(response) {
 			var results = response.data.results;
-			for(var i = 0; i < results.length; i++) {
+			for(var i = results.length - 1; i >= 0; i--) {
 				var res = results[i];
 				if (res.doc.type == "item" && store.filterHideFeeds.indexOf(res.doc.feedId) < 0) {
 					upcall(intf.addFeedItemBottom, res.doc);
