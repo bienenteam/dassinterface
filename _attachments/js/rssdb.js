@@ -14,8 +14,8 @@ function RssDB(intf) {
 		pollInterval: 2000,
 		updateHandle: null, // The timeout handle for managing interval update calls.
 		lastSequence: 0, // The last sequence number that was polled from the database.
-		loadLimit: 50, // The maximum count of changes to poll in one interval.
-		prevLoadCount: 25, // The number of changes to load if the user scrolls down.
+		loadLimit: 100, // The maximum count of changes to poll in one interval.
+		prevLoadCount: 50, // The number of changes to load if the user scrolls down.
 		minSequence: Number.MAX_VALUE, // The sequence number of the oldest item.
 		didFirstPoll: false,
 		filterHideFeeds: [], // An array of feed ids that's items should not be displayed.
