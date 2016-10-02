@@ -14,13 +14,14 @@ function RssDB(intf) {
 		pollInterval: 2000,
 		updateHandle: null, // The timeout handle for managing interval update calls.
 		lastSequence: 0, // The last sequence number that was polled from the database.
-		loadLimit: 100, // The maximum count of changes to poll in one interval.
+		loadLimit: 75, // The maximum count of changes to poll in one interval.
 		prevLoadCount: 50, // The number of changes to load if the user scrolls down.
 		minSequence: Number.MAX_VALUE, // The sequence number of the oldest item.
 		didFirstPoll: false,
 		filterHideFeeds: [], // An array of feed ids that's items should not be displayed.
 		feeds: [], // All feed information.
-		catchErrors: false
+		catchErrors: false,
+		pollActive: true
 	};
 
 
@@ -41,6 +42,11 @@ function RssDB(intf) {
 	// Set if errors from the toplevel api should be cacthed.
 	function setCatchErrors(enabled) {
 		store.catchErrors = enabled;
+	}
+
+	// Set if the api should poll automatically.
+	function setPollActive(pollActive) {
+		store.pollActive = pollActive;
 	}
 
 	// Find an existing feed info by its id.
@@ -218,6 +224,7 @@ function RssDB(intf) {
 
 	this.start = start; // Start polling changes.
 	this.stop = stop; // Stop polling changes and reset the sequence.
+	this.setPollActive = setPollActive; // Set if the api should poll automatically.
 	this.setHideFeed = setHideFeed; // (id) Hide all feed items by feed id.
 	this.setShowFeed = setShowFeed; // (id) Show all feed items by feed id.
 	this.pollPrevious = pollPrevious; // Load previous items.
