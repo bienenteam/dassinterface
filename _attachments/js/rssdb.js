@@ -134,6 +134,7 @@ function RssDB(intf) {
 	// Set a feed as hidden.
 	function setHideFeed(id) {
 		store.filterHideFeeds.push(id);
+		console.info("Current filters: " + JSON.stringify(store.filterHideFeeds));
 		resetPollSequence();
 	}
 
@@ -143,6 +144,7 @@ function RssDB(intf) {
 		if(i >= 0) {
 			store.filterHideFeeds.splice(i, 1);
 		}
+		console.info("Current filters: " + JSON.stringify(store.filterHideFeeds));
 		resetPollSequence();
 	}
 
@@ -181,8 +183,9 @@ function RssDB(intf) {
 
 	// Start updating.
 	function start() {
-		if (store.updateHandle == null)
-		update();
+		if (store.updateHandle == null) {
+			update();
+		}
 	}
 
 	// Stop updating.
@@ -206,10 +209,11 @@ function RssDB(intf) {
 			});
 		});
 
-		if (body)
-		rx.send(JSON.stringify(body));
-		else
-		rx.send();
+		if (body) {
+			rx.send(JSON.stringify(body));
+		} else {
+			rx.send();
+		}
 	}
 
 	this.start = start; // Start polling changes.
