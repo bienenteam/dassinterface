@@ -1,3 +1,13 @@
+window.onscroll = function() {
+  if($(window).scrollTop() + $(window).height() == $(document).height()) {
+         alert("bottom!");
+     }
+};
+
+function TriggerData(){
+ alert();
+}
+
 function FilterItems(e) {
   var postsection = document.getElementById("postsection");
   postsection.innerHTML="";
@@ -11,30 +21,91 @@ function FilterItems(e) {
     e.parentNode.classList.add("active-source");
     db.setShowFeed(e.id);
   }
+  if(postsection.innerHTML="")
+  {
+    var template = _.template("<hr><header class='post-header'><h2 class='post-title'>Keine Feeds zu sehen</h2>  <p class='post-meta'></p></header><div class='post-description'><p></p></div></section>");
+    var render = template();
+    var para = document.createElement("section");
+    para.className+="post";
+    para.className+="empty";
+    var section = document.getElementById("postsection");
+    section.insertBefore( para, section.firstChild );
+  }
+
 }
 
 
 function CreateFeedItem(item){
-
-  var template = _.template("<hr><header class='post-header'><h2 class='post-title'><%= title %></h2>  <p class='post-meta'><%= link %></p></header><div class='post-description'><p><%= summary %></p></div></section>");
+  var template = _.template("<hr><header class='post-header'><h2 class='post-title'><%= title %></h2>  <p class='post-meta'><a href='<%= link %>'><%= link %></a></p></header><div class='post-description'><p><%= summary %></p></div></section>");
   console.log(item);
   var render = template(item);
   var para = document.createElement("section");
-  para.className="post";
+  para.className+="post";
+  para.className+="lazyload";
   para.innerHTML= render;
-  var section = document.getElementById("postsection");
-  section.insertBefore( para, section.firstChild );
+  return para;
 }
 
+CreateFeedItemTop(item){
+  var section = document.getElementById("postsection");
+  section.insertBefore( CreateFeedItem(item), section.firstChild );
+}
+
+CreateFeedItemBottom(item){
+  var section = document.getElementById("postsection");
+  section.appendChild(CreateFeedItem(item));
+}
 
 function CreateFeed(feed){
-
-  var template = _.template("<a class='pure-button' onclick='FilterItems(this)' id='<%= feedid %>'><%= title %></a>");
+  var feedname = feed.name;
+  var template = _.template("<a style='vertical-align:middle;' class='pure-button masterTooltip' onclick='FilterItems(this)' id='<%= _id %>' title='"+feedname+"'><%= name %></a>");
   console.log(feed);
+  feed.name = feed.name.substring(0,1);
   var render = template(feed);
   var para = document.createElement("li");
   para.className="nav-item active-source";
   para.innerHTML= render;
-  var section = document.getElementById("nav-list");
-  section.insertBefore( para, section.firstChild );
+
+  var section = document.getElementById("feed-list");
+  var childDivs = $( "feed-list" ).children();
+  var before =null;
+  if(childDivs != null){
+    for( i=0; i< childDivs.length; i++ )
+    {
+      var childDiv = childDivs[i];
+      if((childDiv.getElementsByTagName('a')[0].getAttribute('id') > feedname)){
+        before = childDiv;
+      }
+    }
+  }
+
+  if(before != null){
+    section.insertBefore( para, before );
+  }
+  else{
+    section.appendChild(para);
+  }
+  UpdateTooltip();
+}
+
+function UpdateTooltip()
+{
+  $('.masterTooltip').hover(function(){
+          // Hover over code
+          console.log(this);
+          var title = $(this).attr('title');
+          $(this).data('tipText', title).removeAttr('title');
+          $('<div class="tooltip"></div>')
+          .text(title)
+          .prependTo('body')
+          .fadeIn('slow');
+  }, function() {
+          $(this).attr('title', $(this).data('tipText'));
+          $('.tooltip').remove();
+  }).mousemove(function(e) {
+          var mousex = e.pageX + 20;
+          var mousey = e.pageY + 10;
+          $('.tooltip')
+          .css({ top: mousey, left: mousex })
+  });
 }
