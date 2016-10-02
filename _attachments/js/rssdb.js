@@ -190,7 +190,9 @@ function RssDB(intf) {
 	// Update now and set the timeout for the next update.
 	function update() {
 		store.updateHandle = setTimeout(update, store.pollInterval);
-		pollChangedFeedItems();
+		if (store.pollActive) {
+			pollChangedFeedItems();
+		}
 	}
 
 	// Start updating.
