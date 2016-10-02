@@ -1,4 +1,4 @@
-Pr<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -31,7 +31,9 @@ Pr<!doctype html>
     .feedlist b{
       padding-right:10px;
     }
-
+    a:link span, a:visited span{
+      font-family: sans-serif;
+    }
     .feedlist a:link, .feedlist a:visited{
       color:#CCC;
     }
@@ -63,8 +65,9 @@ Pr<!doctype html>
   <div id="layout" class="pure-g">
       <div class="sidebar pure-u-1 pure-u-md-1-12">
           <div class="header">
-              <h1 class="brand-title"></h1>
-              <h2 class="brand-tagline">RSS</h2>
+
+                <h1 class="brand-title masterTooltip" title="Feed Aggregator Kit">FAK</h1>
+                <h2 class="brand-tagline"></h2><br>
 
               <nav class="nav">
                   <a href="http://93.180.156.188:5984/beehive/_design/meise/index.html">zum Feed</a>

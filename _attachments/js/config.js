@@ -8,9 +8,7 @@ var RSScfg = {
 
     loadFeeds : function(){
 
-
-      this.request('GET',this.url + this.db + '_design/all/_view/by_type?key="feed"&include_docs=true', function(d){    RSScfg.renderFeeds(d); }, ""  );
-
+      this.request('GET',this.url + this.db + '_design/all/_view/by_type?key="feed"&include_docs=true', function(d){    RSScfg.renderFeeds(d); }, "");
 
     },
 
@@ -33,7 +31,7 @@ var RSScfg = {
             el.innerHTML = '<div class="feedlist"> \
             <b onclick="RSScfg.editFeed(\''+ data.rows[i].value +'\');">'+ data.rows[i].doc.name +'</b> \
             <div>\
-             <a href="#editFeed" class="fa fa-pencil" aria-hidden="true"></a> \
+             <a href="#editFeed" onclick="RSScfg.editFeed(\''+ data.rows[i].value +'\');" class="fa fa-pencil" aria-hidden="true"></a> \
              <a href="#editFeed" onclick="RSScfg.delete(\''+ data.rows[i].value +'\' );"  class="fa fa-times" aria-hidden="true"></a></div>  </div>';
             obj.appendChild(el);
           }
@@ -47,7 +45,7 @@ var RSScfg = {
         }
 
         var el = document.createElement("div");
-        el.innerHTML = '<div> <b><a href="#editFeed" style="color:#000" onclick="RSScfg.editFeed( 0 );" class="fa fa-plus"> Feed hinzuf&uuml;gen </a>  </div>';
+        el.innerHTML = '<div> <b><a href="#editFeed" style="color:#000" onclick="RSScfg.editFeed( 0 );" class="fa fa-plus"> <span>Feed hinzuf&uuml;gen</span> </a>  </div>';
         obj.appendChild(el);
 
     },
