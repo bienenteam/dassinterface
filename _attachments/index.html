@@ -19,10 +19,10 @@
     <script>
 
       var db = new RssDB({
-        addFeedItem: function(item) {
+        addFeedItemTop: function(item) {
           CreateFeedItemTop(item);
         },
-        addFeedItem: function(item) {
+        addFeedItemBottom: function(item) {
           CreateFeedItemBottom(item);
         },
         addFeed: function(item) {
@@ -31,22 +31,20 @@
       });
 
       db.start();
-
+      db.setCatchErrors(false);
     </script>
 
 
 </head>
 <body>
 
-  <div style="position: absolute; top:100px; left: 100px; height: 10px; width:50px; background-color:red;">
-  </div>
 
   <div id="layout" class="pure-g">
 
       <div class="sidebar pure-u-1 pure-u-md-1-12">
 
           <div class="header">
-              <h1 class="brand-title masterTooltip" title="RSS Feed Reader des Bienenteams">RSS</h1>
+              <h1 class="brand-title masterTooltip" title="Feed Aggregator Kit">FAK</h1>
               <h2 class="brand-tagline"></h2><br>
               <a href="http://93.180.156.188:5984/beehive/_design/cfg/config.html" id="config">CONFIG</a>
               <nav class="nav">
@@ -59,14 +57,13 @@
           </div>
       </div>
 
-      <div class="content pure-u-1 pure-u-md-3-4" >
+      <div class="content pure-u-1 pure-u-md-12-12" >
           <div id="postsection">
 
             <!-- A wrapper for all the blog posts -->
 
-            <div id="endnode"><h1>Loading ...</h1></div>
-              </div>
-
+          </div>
+          <div id="endnode"><h1>Loading ...</h1></div>
           </div>
 
       </div>

@@ -32,14 +32,14 @@ h3 {
 .header {
     text-align: center;
     top: auto;
-    margin: 3em auto;
+    margin: 5px auto;
 }
 
 .sidebar {
     background: rgb(30, 30, 30);
     color: #fff;
     overflow-y: visible;
-    overflow-x: scroll;
+    overflow-x: hidden;
 }
 
 .brand-title,
@@ -125,11 +125,11 @@ h3 {
 @media (min-width: 48em) {
     .content {
         padding: 2em 3em 0;
-        margin-left: 20%;
+        margin-left: 100px;
     }
 
     .header {
-        margin: 80% 2em 0;
+        margin: 5px 5px 0;
         text-align: center;
     }
 
@@ -137,7 +137,7 @@ h3 {
         position: fixed;
         top: 0;
         bottom: 0;
-        width: 150px !important;
-        padding-right: 5%;
+        width:100px;
+        overflow-x: hidden;
     }
 }

@@ -1,25 +1,6 @@
-::-webkit-scrollbar {
-    display: none;
-}
-html {overflow: -moz-scrollbars-none;}
 
-@-moz-document url(chrome://browser/content/browser.xul) {
-  #stylish-global-styles > menupopup {
-    max-height: 30em;
-  }
-  #stylish-global-styles > menupopup > arrowscrollbox > scrollbox {
-    overflow: auto;
-  }
-  #stylish-global-styles > menupopup > arrowscrollbox >
-    autorepeatbutton {
-    display: none;
-
-  }
-}
-
-#photoreel::-webkit-scrollbar {
-    height: 0;
-    width: 0;
+html{
+  overflow-x: hidden;
 }
 
 /* Tooltip container */
@@ -79,4 +60,12 @@ html {overflow: -moz-scrollbars-none;}
   height:42px;
   width: 42px;
   margin:2px;
+}
+
+.small-header{
+  font-size: 1.4em !important;
+}
+
+.smaller-header{
+  font-size: 1.1em !important;
 }
