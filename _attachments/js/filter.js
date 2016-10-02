@@ -46,12 +46,12 @@ function CreateFeedItem(item){
   return para;
 }
 
-CreateFeedItemTop(item){
+function CreateFeedItemTop(item){
   var section = document.getElementById("postsection");
   section.insertBefore( CreateFeedItem(item), section.firstChild );
 }
 
-CreateFeedItemBottom(item){
+function CreateFeedItemBottom(item){
   var section = document.getElementById("postsection");
   section.appendChild(CreateFeedItem(item));
 }
