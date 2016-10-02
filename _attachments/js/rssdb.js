@@ -3,6 +3,7 @@
 Parameters:
 intf: {
 addFeedItem: function(item_info) - Add a feed item on top of the item list.
+addFeedItemBottom: function(item_info) - Add a feed item at the bottom.
 addFeed: function(feed_info) - Add a feed to the list of available feeds.
 }
 
@@ -14,6 +15,8 @@ function RssDB(intf) {
 		updateHandle: null, // The timeout handle for managing interval update calls.
 		lastSequence: 0, // The last sequence number that was polled from the database.
 		loadLimit: 50, // The maximum count of changes to poll in one interval.
+		prevLoadLimit: 25, // The number of changes to load if the user scrolls down.
+		minSequence: Number.MAX_VALUE, // The sequence number of the oldest item.
 		didFirstPoll: false,
 		filterHideFeeds: [], // An array of feed ids that's items should not be displayed.
 		feeds: [], // All feed information.
@@ -89,19 +92,41 @@ function RssDB(intf) {
 			+ "&limit=" + store.loadLimit;
 			request("GET", store.database + "/_changes?" + query, function(response) {
 				var results = response.data.results;
+				if (response.data.last_seq < store.minSequence)
+					store.minSequence = response.data.last_seq;
 				for(var i = 0; i < results.length; i++) {
 					var res = results[i];
 					if (res.doc.type == "item" && store.filterHideFeeds.indexOf(res.doc.feedId) < 0) {
 						upcall(intf.addFeedItem, res.doc);
 						requireFeedInfo(res.doc.feedId);
+
+						if (res.seq < store.minSequence)
+							store.minSequence = res.seq;
 					}
 				}
-
 				store.lastSequence = response.data.last_seq;
 			});
 		} else {
 			pollFirstChangesFeed();
 		}
+	}
+
+	// Load old items.
+	function pollPrevious() {
+		var oldMinSequence = store.minSequence;
+		store.minSequence -= 1;
+			var query = "include_docs=true&since=" + store.minSequence
+			+ "&limit=" + (oldMinSequence - store.minSequence);
+		request("GET", store.database + "/_changes?" + query, function(response) {
+			var results = response.data.results;
+			for(var i = 0; i < results.length; i++) {
+				var res = results[i];
+				if (res.doc.type == "item" && store.filterHideFeeds.indexOf(res.doc.feedId) < 0) {
+					upcall(intf.addFeedItemBottom, res.doc);
+					requireFeedInfo(res.doc.feedId);
+				}
+			}
+		});
 	}
 
 
@@ -125,6 +150,7 @@ function RssDB(intf) {
 	function resetPollSequence() {
 		store.lastSequence = 0;
 		store.didFirstPoll = false;
+		store.minSequence = Number.MAX_VALUE;
 
 		if (store.updateHandle != null)
 		updateNextFrame();
@@ -190,4 +216,5 @@ function RssDB(intf) {
 	this.stop = stop; // Stop polling changes and reset the sequence.
 	this.setHideFeed = setHideFeed; // (id) Hide all feed items by feed id.
 	this.setShowFeed = setShowFeed; // (id) Show all feed items by feed id.
+	this.pollPrevious = pollPrevious; // Load previous items.
 }
