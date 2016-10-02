@@ -4,6 +4,8 @@
     box-sizing: border-box;
 }
 
+
+
 a {
     text-decoration: none;
     color: rgb(255, 255, 255);
@@ -36,6 +38,8 @@ h3 {
 .sidebar {
     background: rgb(30, 30, 30);
     color: #fff;
+    overflow-y: visible;
+    overflow-x: scroll;
 }
 
 .brand-title,
@@ -64,8 +68,6 @@ h3 {
     background: transparent;
     border: 2px solid rgb(140, 140, 140);
     color: #fff;
-    margin-top: 1em;
-    letter-spacing: 0.05em;
     text-transform: uppercase;
     font-size: 85%;
 }
@@ -83,6 +85,7 @@ h3 {
     font-size: 80%;
     font-weight: 500;
     letter-spacing: 0.1em;
+    z-index: 1;
 }
 
 .content {
@@ -99,7 +102,7 @@ h3 {
 }
 
 .post-description {
-    font-family: Georgia, "Cambria", serif;
+    font-family: sans-serif;
     color: #444;
     line-height: 1.8em;
 }
@@ -122,7 +125,7 @@ h3 {
 @media (min-width: 48em) {
     .content {
         padding: 2em 3em 0;
-        margin-left: 12.5%;
+        margin-left: 20%;
     }
 
     .header {
@@ -134,6 +137,7 @@ h3 {
         position: fixed;
         top: 0;
         bottom: 0;
-        min-width: 120px;
+        width: 150px !important;
+        padding-right: 5%;
     }
 }

@@ -1,3 +1,39 @@
+::-webkit-scrollbar {
+    display: none;
+}
+html {overflow: -moz-scrollbars-none;}
+
+@-moz-document url(chrome://browser/content/browser.xul) {
+  #stylish-global-styles > menupopup {
+    max-height: 30em;
+  }
+  #stylish-global-styles > menupopup > arrowscrollbox > scrollbox {
+    overflow: auto;
+  }
+  #stylish-global-styles > menupopup > arrowscrollbox >
+    autorepeatbutton {
+    display: none;
+
+  }
+}
+
+#photoreel::-webkit-scrollbar {
+    height: 0;
+    width: 0;
+}
+
+/* Tooltip container */
+.tooltip {
+	display:none;
+	position:absolute !important;
+	border:1px solid #333 !important;
+	background-color:#161616 !important;
+	border-radius: 10px !important;
+	padding:10px !important;
+	color: rgb(255,255,255) !important;
+	font-size:12px sans-serif ;
+  z-index: 1000;
+}
 
 .active-source a{
       border: 2px solid rgb(255, 255, 255) !important;
@@ -9,17 +45,34 @@
       text-decoration: none;
 }
 
+@media (min-width: 48em) {
+  .nav-item{
+    margin-bottom: 15px !important;
+  }
+}
+
 .nav-item{
-  height:50px;
-  width:50px;
+  height:50px !important;
+  min-width:50px !important;
   padding: 5px !important;
   margin: 5px;
 }
 
 .pure-button{
-  height:50px;
-  width:50px;
-  padding: 0px !important;
+  height:46px !important;
+  width:46px !important;
+  display: table-cell !important;
+  vertical-align: middle !important;
+}
+
+.post-header a{
+  color: rgb(100,100,100) !important;
+}
+
+
+#config{
+  height:50px !important;
+  width: 50px !important;
 }
 
 .filtericon{
